@@ -1,50 +1,51 @@
 import React, { useState } from 'react';
+import Nav from '../Nav';
 import { MapPin } from 'lucide-react';
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
 
-const RideEntry = () => {
+const RiderEntry = () => {
   const [source, setSource] = useState('');
   const [destination, setDestination] = useState('');
-  const navigate= useNavigate();
-
-  const handleSourceChange = (e) => {
-    setSource(e.target.value);
-  };
-
-  const handleDestinationChange = (e) => {
-    setDestination(e.target.value);
-  };
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    navigate('/rides');
-
+    navigate('/rides',{ state: { source, destination } });
   };
 
   return (
-    <div className='max-w-lg mx-auto mt-20 p-6 bg-white shadow-lg rounded-lg'>
-      <h1 className='text-2xl font-bold text-center mb-4'>Request a ride for now or later</h1>
-      <p className='text-center text-gray-600 mb-6'>Add your trip details, hop in, and go</p>
+    <>
+      <Nav />
+      <div className="flex flex-col lg:flex-row items-center justify-center px-6 h-screen">
+        <div className="w-md p-8 bg-white shadow-xl rounded-lg">
+          <h1 className="text-3xl font-bold text-center mb-3">Request a ride for now or later</h1>
+          <p className="text-center text-gray-600 mb-6">Add your trip details, hop in, and go</p>
+          
+          <form onSubmit={handleSubmit}>
+            <div className="mb-4 flex items-center border border-gray-300 rounded-md px-3 py-2">
+              <MapPin className="text-gray-500 mr-2" />
+              <input type="text" placeholder="Enter source location" value={source} onChange={(e) => setSource(e.target.value)}
+                className=" focus:outline-none"/>
+            </div>
 
-      <form onSubmit={handleSubmit}>
-        <div className='mb-4 flex items-center border-2 border-gray-300 rounded-md'>
-          <MapPin className='text-gray-600 mx-2' />
-          <input type="text" placeholder="Enter source location" value={source} onChange={handleSourceChange}
-            className='flex-1 py-2 px-3 rounded-md '/>
+            <div className="mb-6 flex items-center border border-gray-300 rounded-md px-3 py-2">
+              <MapPin className="text-gray-500 mr-2" />
+              <input type="text" placeholder="Enter destination location" value={destination} onChange={(e) => setDestination(e.target.value)}
+                className="focus:outline-none"/>
+            </div>
+
+            <button type="submit" className="w-full py-3 bg-black text-white font-semibold rounded-md hover:bg-gray-800 transition duration-300">
+              Request Ride
+            </button>
+          </form>
         </div>
-
-        <div className='mb-6 flex items-center border-2 border-gray-300 rounded-md'>
-          <MapPin className='text-gray-600 mx-2' />
-          <input type="text" placeholder="Enter destination location" value={destination} onChange={handleDestinationChange}
-            className='flex-1 py-2 px-3 rounded-md' />
+        <div className="mt-10 lg:mt-0 lg:ml-20">
+          <img src="https://www.uber-assets.com/image/upload/f_auto,q_auto:eco,c_fill,h_576,w_576/v1683919251/assets/42/a29147-e043-42f9-8544-ecfffe0532e9/original/travel-ilustra.png" 
+               alt="blank" className="max-w-sm" />
         </div>
-
-        <button type="submit" className='w-full py-3 bg-black text-white font-semibold rounded-md'>
-          Request Ride
-        </button>
-      </form>
-    </div>
+      </div>
+    </>
   );
 };
 
-export default RideEntry;
+export default RiderEntry;

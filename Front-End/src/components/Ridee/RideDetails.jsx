@@ -1,107 +1,104 @@
 import React, { useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import Nav from '../Nav';
 
 const RideDetails = () => {
-  // Initial state for rides data (You could fetch this data from an API)
-  const ridesData = [
-    { id: 1, vehicleType: 'Car', price: 200, gender: 'Male', driverName: 'John Doe' },
-    { id: 2, vehicleType: 'Bike', price: 100, gender: 'Female', driverName: 'Jane Smith' },
-    { id: 3, vehicleType: 'Car', price: 300, gender: 'Male', driverName: 'Mark Johnson' },
-    { id: 4, vehicleType: 'SUV', price: 400, gender: 'Female', driverName: 'Emily Davis' },
-    // Add more rides here
-  ];
+  const location = useLocation();
+  const { source, destination } = location.state;
 
-  // State to manage the selected filters
-  const [vehicleType, setVehicleType] = useState('');
-  const [minPrice, setMinPrice] = useState('');
-  const [maxPrice, setMaxPrice] = useState('');
-  const [gender, setGender] = useState('');
-
-  // Filtering logic
-  const filteredRides = ridesData.filter((ride) => {
-    const isVehicleTypeMatch = vehicleType ? ride.vehicleType === vehicleType : true;
-    const isGenderMatch = gender ? ride.gender === gender : true;
-    const isPriceMatch = 
-      (minPrice ? ride.price >= minPrice : true) &&
-      (maxPrice ? ride.price <= maxPrice : true);
-
-    return isVehicleTypeMatch && isGenderMatch && isPriceMatch;
+  const [filters, setFilters] = useState({
+    vehicleType: '',
+    gender: '',
+    priceRange: '',
+    totalSeats: '',
+    pickUpTime: ''
   });
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      [name]: value,
+    }));
+  };
+
   return (
-    <div className='max-w-4xl mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg'>
-      <h1 className='text-2xl font-bold mb-4'>Available Rides</h1>
+    <>
+      <Nav />
+      <div className='flex gap-10 p-10'>
+        <div className='p-4 w-1/4 bg-white shadow-xl rounded-lg'>
 
-      {/* Filters */}
-      <div className='mb-6 flex space-x-4'>
-        <div>
-          <label htmlFor="vehicleType" className='block'>Vehicle Type:</label>
-          <select
-            id="vehicleType"
-            value={vehicleType}
-            onChange={(e) => setVehicleType(e.target.value)}
-            className='p-2 border rounded-md'>
-            <option value="">All</option>
-            <option value="Car">Car</option>
-            <option value="Bike">Bike</option>
-            <option value="SUV">SUV</option>
-          </select>
-        </div>
+          <h2 className='text-lg font-bold mb-2'>Get Rides</h2>
 
-        <div>
-          <label htmlFor="minPrice" className='block'>Min Price:</label>
-          <input
-            id="minPrice"
-            type="number"
-            value={minPrice}
-            onChange={(e) => setMinPrice(e.target.value)}
-            className='p-2 border rounded-md'
-            placeholder="Min Price"
-          />
-        </div>
+          <div className='mb-2 inline'>
+            <label className='block font-semibold'>Source:</label>
+            <p>{source}</p>
+          </div>
 
-        <div>
-          <label htmlFor="maxPrice" className='block'>Max Price:</label>
-          <input
-            id="maxPrice"
-            type="number"
-            value={maxPrice}
-            onChange={(e) => setMaxPrice(e.target.value)}
-            className='p-2 border rounded-md'
-            placeholder="Max Price"
-          />
-        </div>
+          <div className='mb-2 inline'>
+            <label className='block font-semibold'>Destination:</label>
+            <p>{destination}</p>
+          </div>
 
-        <div>
-          <label htmlFor="gender" className='block'>Gender:</label>
-          <select
-            id="gender"
-            value={gender}
-            onChange={(e) => setGender(e.target.value)}
-            className='p-2 border rounded-md'>
-            <option value="">All</option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-          </select>
-        </div>
-      </div>
+          <div className='mb-2'>
+            <label className='block font-semibold'>Pick-Up Time:</label>
+            <input type='time' name='pickUpTime' value={filters.pickUpTime} onChange={handleChange} className='border-white rounded p-1 w-full bg-gray-200' />
+          </div>
 
-      {/* Display Filtered Rides */}
-      <div className='space-y-4'>
-        {filteredRides.length > 0 ? (
-          filteredRides.map((ride) => (
-            <div key={ride.id} className='p-4 border rounded-md'>
-              <h2 className='font-semibold'>{ride.driverName}</h2>
-              <p>Vehicle: {ride.vehicleType}</p>
-              <p>Price: ${ride.price}</p>
-              <p>Gender: {ride.gender}</p>
-              <button>Request</button>
+          <div className='mb-2'>
+            <label className='block font-semibold'>Vehicle Type:</label>
+            <select  name='vehicleType'  value={filters.vehicleType} onChange={handleChange} className='border-white rounded p-1 w-full bg-gray-200'>
+              <option value=''>Select</option>
+              <option value='car'>Car</option>
+              <option value='bike'>Bike</option>
+              <option value='auto'>Auto</option>
+            </select>
+          </div>
+
+          {filters.vehicleType === 'car' && (
+            <div className='mb-2'>
+              <label className='block font-semibold'>Total Seats:</label>
+              <input type='number' name='totalSeats' min='1' max='3' value={filters.totalSeats} onChange={handleChange} className='border-white rounded p-1 w-full bg-gray-200' />
             </div>
-          ))
-        ) : (
-          <p>No rides available with the selected filters.</p>
-        )}
+          )}
+
+          <div className='mb-2'>
+            <label className='block font-semibold'>Gender Preference:</label>
+            <select name='gender' value={filters.gender} onChange={handleChange} className='border-white rounded p-1 w-full bg-gray-200'>
+              <option value=''>Any</option>
+              <option value='male'>Male</option>
+              <option value='female'>Female</option>
+            </select>
+          </div>
+
+          <div className='mb-2'>
+            <label className='block font-semibold'>Price Range:</label>
+            <select name='priceRange' value={filters.priceRange} onChange={handleChange} className='border-white rounded p-1 w-full bg-gray-200'>
+              <option value=''>Select</option>
+              <option value='0-200'>0 - 200</option>
+              <option value='200-300'>200 - 300</option>
+              <option value='300-500'>300 - 500</option>
+              <option value='500-600'>500 - 600</option>
+              <option value='600-800'>600 - 800</option>
+              <option value='800-1000'>800 - 1000</option>
+              <option value='1000-1500'>1000 - 1500</option>
+            </select>
+          </div>
+
+        </div>
+
+        
+        <div className='p-4 '>
+          <h2 className='text-lg font-bold'>Available Rides</h2>
+          <p>rides will be listed here...</p>
+        </div>
+
+        <div className='p-4 '>
+          <h2 className='text-lg font-bold'>Map</h2>
+          <p>map will be displayed here...</p>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

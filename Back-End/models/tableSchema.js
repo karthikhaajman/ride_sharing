@@ -16,7 +16,7 @@ const User = sequelize.define('User', {
         allowNull: false,
     },
     gender: {
-        type: DataTypes.ENUM('male', 'female', 'other'),
+        type: DataTypes.STRING,
         allowNull: false,
     },
     phone: {
@@ -56,7 +56,7 @@ const Vehicle = sequelize.define('Vehicle', {
         allowNull: false,
     },
     type: {
-        type: DataTypes.ENUM('car', 'bike'),
+        type: DataTypes.STRING,
         allowNull: false,
     },
     licenseNumber: {

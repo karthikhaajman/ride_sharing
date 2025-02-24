@@ -4,6 +4,7 @@ const authMiddleware = require('../middleware/authMiddleware');
 const router = express.Router();
 
 router.post('/', authMiddleware, createRide);
+router.get('/available', getAvailableRides);
 router.put('/:id/book', authMiddleware, bookRide);
 router.put('/:id/complete', authMiddleware, completeRide);
 

@@ -1,4 +1,34 @@
-const { Ride } = require('../models/tableSchema');
+const { Ride, User, Vehicle } = require('../models/tableSchema');
+const { Op } = require('sequelize');
+
+exports.getAvailableRides = async (req, res) => {
+    try {
+        const { vehicleType, preferredGender, status, pickupLocation, dropLocation } = req.query;
+
+        const filters = {
+            rideTakerId: null, // Only fetch rides that haven't been booked
+        };
+
+        if (vehicleType) filters['$Vehicle.type$'] = vehicleType;
+        if (preferredGender) filters.preferredGender = { [Op.or]: ['any', preferredGender] };
+        if (status) filters.status = status;
+        if (pickupLocation) filters.pickupLocation = { [Op.iLike]: `%${pickupLocation}%` };
+        if (dropLocation) filters.dropLocation = { [Op.iLike]: `%${dropLocation}%` };
+
+        const availableRides = await Ride.findAll({
+            where: filters,
+            include: [
+                { model: User, as: 'RideGiver', attributes: ['name', 'gender', 'phone'] },
+                { model: Vehicle, attributes: ['type', 'registrationNumber'] },
+            ],
+        });
+
+        res.json(availableRides);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to fetch rides' });
+    }
+};
+
 
 exports.createRide = async (req, res) => {
     try {

@@ -111,6 +111,10 @@ const Ride = sequelize.define('Ride', {
         type: DataTypes.ENUM('pending', 'ongoing', 'completed', 'cancelled'),
         defaultValue: 'pending',
     },
+    preferredGender: { 
+        type: DataTypes.STRING, 
+        defaultValue: 'any' 
+    },
 }, {
     timestamps: true,
 });

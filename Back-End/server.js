@@ -7,6 +7,8 @@ const sequelize = require('./database/db');
 // Import Routes
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
+const driverRoutes = require('./routes/driverRoutes');
+const riderRoutes = require('./routes/riderRoutes');
 const rideRoutes = require('./routes/rideRoutes');
 const vehicleRoutes = require('./routes/vehicleRoutes');
 const ratingRoutes = require('./routes/ratingRoutes');
@@ -20,6 +22,8 @@ app.use(bodyParser.json());
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/drivers', driverRoutes);
+app.use('/api/riders', riderRoutes);
 app.use('/api/rides', rideRoutes);
 app.use('/api/vehicles', vehicleRoutes);
 app.use('/api/ratings', ratingRoutes);
